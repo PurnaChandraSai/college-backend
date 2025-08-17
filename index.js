@@ -4,8 +4,24 @@ const { Student } = require("./db");
 const cors = require("cors");
 
 const app = express();
+const allowedOrigins = [
+  "http://localhost:5173",               
+  "https://college-frontend-rho.vercel.app" 
+];
+app.use(cors({
+  origin: function (origin, callback) {
+   
+    if (!origin) return callback(null, true);
 
-app.use(cors({ origin: process.env.FRONTEND_URL || "*" }));
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true); // allow
+    } else {
+      callback(new Error("❌ Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 app.use(express.json());
 
 
@@ -16,7 +32,7 @@ app.post("/student", async (req, res) => {
         const NewStudent = await Student.create({ Username, PhoneNo, email });
         console.log("✅ New Student Created:", NewStudent);
 
-        res.status(201).json(NewStudent);
+        res.status(201).json({data :NewStudent});
     } catch (err) {
         console.error("❌ Error creating student:", err);
         res.status(500).json({ error: "Failed to create student" });
