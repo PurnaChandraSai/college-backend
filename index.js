@@ -32,7 +32,7 @@ app.post("/student", async (req, res) => {
         const NewStudent = await Student.create({ Username, PhoneNo, email });
         console.log("✅ New Student Created:", NewStudent);
 
-        res.status(201).json({data :NewStudent});
+        res.status(201).json({data :"done"});
     } catch (err) {
         console.error("❌ Error creating student:", err);
         res.status(500).json({ error: "Failed to create student" });
